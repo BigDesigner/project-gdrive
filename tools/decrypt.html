@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rescue Vault - Dosya Deşifreleyici</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border: rgba(51, 65, 85, 0.6);
+      --border-focus: #06b6d4;
+      --primary: #06b6d4;
+      --primary-hover: #0891b2;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #162033 0%, var(--bg) 75%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      user-select: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(6, 182, 212, 0.08);
+      padding: 28px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      margin-left: auto;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(15, 23, 42, 0.4);
+      margin-bottom: 20px;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--primary);
+      background: rgba(6, 182, 212, 0.08);
+      box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.15);
+    }
+
+    .dropzone-icon {
+      margin-bottom: 12px;
+      color: var(--text-muted);
+    }
+
+    .dropzone p {
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .dropzone span {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .file-info {
+      display: none;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .file-info.active {
+      display: flex;
+    }
+
+    .file-details {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .file-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-size {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .remove-file-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .remove-file-btn:hover {
+      color: var(--danger);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 42px 12px 14px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--primary);
+    }
+
+    .input-wrapper button {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: #03141f;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-action:hover:not(:disabled) {
+      background: #22d3ee;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-action:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .status-box.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .status-box.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+        </svg>
+      </div>
+      <div>
+        <h1>Rescue Vault</h1>
+        <p>Zero-Knowledge Dosya Deşifreleyici</p>
+      </div>
+      <div class="badge">OFFLINE</div>
+    </div>
+
+    <!-- Dropzone -->
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="12" y1="18" x2="12" y2="12"></line>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <p>Şifreli (.enc) dosyayı buraya bırakın</p>
+      <span>veya bilgisayarınızdan seçmek için tıklayın</span>
+      <input type="file" id="fileInput" accept=".enc" style="display: none;">
+    </div>
+
+    <!-- Selected File Info -->
+    <div class="file-info" id="fileInfo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+      </svg>
+      <div class="file-details">
+        <div class="file-name" id="fileName">dosya.enc</div>
+        <div class="file-size" id="fileSize">0 KB</div>
+      </div>
+      <button class="remove-file-btn" id="removeFileBtn" title="Kaldır">✕</button>
+    </div>
+
+    <!-- Password Input -->
+    <div class="form-group">
+      <label for="password">Deşifreleme Parolası</label>
+      <div class="input-wrapper">
+        <input type="password" id="password" placeholder="Yüklerken belirlediğiniz parola">
+        <button type="button" id="togglePasswordBtn">👁</button>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <button class="btn-action" id="decryptBtn" disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      Dosyayı Deşifre Et ve Kaydet
+    </button>
+
+    <!-- Status Box -->
+    <div class="status-box" id="statusBox"></div>
+
+    <div class="footer">
+      AES-256-GCM • PBKDF2 100.000 İterasyon • %100 İstemci Tarafı
+    </div>
+  </div>
+
+  <script>
+    const MAGIC = new Uint8Array([0x45, 0x4E, 0x43, 0x30]); // "ENC0"
+    const SALT_LEN = 16;
+    const IV_LEN = 12;
+    const ITERATIONS = 100000;
+
+    let selectedFile = null;
+
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const removeFileBtn = document.getElementById('removeFileBtn');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const decryptBtn = document.getElementById('decryptBtn');
+    const statusBox = document.getElementById('statusBox');
+
+    function formatBytes(bytes) {
+      if (!bytes) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
+    }
+
+    function checkReady() {
+      decryptBtn.disabled = !(selectedFile && passwordInput.value.length > 0);
+    }
+
+    function setFile(file) {
+      if (!file) return;
+      selectedFile = file;
+      fileName.textContent = file.name;
+      fileSize.textContent = formatBytes(file.size);
+      fileInfo.classList.add('active');
+      dropzone.style.display = 'none';
+      checkReady();
+    }
+
+    function clearFile() {
+      selectedFile = null;
+      fileInput.value = '';
+      fileInfo.classList.remove('active');
+      dropzone.style.display = 'block';
+      checkReady();
+    }
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) setFile(e.target.files[0]);
+    });
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+    });
+
+    removeFileBtn.addEventListener('click', clearFile);
+
+    passwordInput.addEventListener('input', checkReady);
+
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPass = passwordInput.type === 'password';
+      passwordInput.type = isPass ? 'text' : 'password';
+      togglePasswordBtn.textContent = isPass ? '🔒' : '👁';
+    });
+
+    function showStatus(msg, type) {
+      statusBox.className = 'status-box ' + type;
+      statusBox.innerHTML = msg;
+    }
+
+    async function decryptFileBuffer(buffer, password) {
+      const bytes = new Uint8Array(buffer);
+      if (bytes.length < MAGIC.length + SALT_LEN + IV_LEN + 16) {
+        throw new Error('Dosya boyutu çok küçük veya geçerli bir Rescue Vault paketi değil.');
+      }
+
+      // 1. Magic bayt doğrula
+      for (let i = 0; i < MAGIC.length; i++) {
+        if (bytes[i] !== MAGIC[i]) {
+          throw new Error('Geçersiz dosya formatı. "ENC0" başlığı bulunamadı.');
+        }
+      }
+
+      const salt = bytes.slice(4, 4 + SALT_LEN);
+      const iv = bytes.slice(4 + SALT_LEN, 4 + SALT_LEN + IV_LEN);
+      const ciphertext = bytes.slice(4 + SALT_LEN + IV_LEN);
+
+      // 2. PBKDF2 ile AES Anahtarı Türet
+      const enc = new TextEncoder();
+      const baseKey = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveKey']
+      );
+
+      const aesKey = await crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt,
+          iterations: ITERATIONS,
+          hash: 'SHA-256',
+        },
+        baseKey,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']
+      );
+
+      // 3. Deşifre Et (Web Crypto AES-GCM)
+      const decryptedBuffer = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv },
+        aesKey,
+        ciphertext
+      );
+
+      return decryptedBuffer;
+    }
+
+    decryptBtn.addEventListener('click', async () => {
+      if (!selectedFile || !passwordInput.value) return;
+
+      decryptBtn.disabled = true;
+      showStatus('⏳ Dosya okunuyor ve deşifre ediliyor...', 'success');
+
+      try {
+        const fileBuffer = await selectedFile.arrayBuffer();
+        const decryptedBuffer = await decryptFileBuffer(fileBuffer, passwordInput.value);
+
+        // Orijinal dosya adını belirle
+        let targetName = selectedFile.name;
+        if (targetName.endsWith('.enc')) {
+          targetName = targetName.slice(0, -4);
+        } else {
+          targetName += '.decrypted';
+        }
+
+        // İndirme tetikle
+        const blob = new Blob([decryptedBuffer]);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = targetName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showStatus(`✅ <strong>Başarıyla Deşifre Edildi!</strong><br>Dosya kaydedildi: <strong>${targetName}</strong> (${formatBytes(decryptedBuffer.byteLength)})`, 'success');
+      } catch (err) {
+        showStatus(`❌ <strong>Deşifreleme Başarısız:</strong> ${err.message}<br><small>Parolanın doğruluğunu ve dosyanın bozulmadığını kontrol edin.</small>`, 'error');
+      } finally {
+        decryptBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

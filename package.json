@@ -13,6 +13,7 @@
     "auth:token": "node scripts/get-refresh-token.js",
     "get-token": "node scripts/get-refresh-token.js",
     "decrypt": "node scripts/decrypt-tool.js",
+    "decrypt:gui": "start decrypt-gui.bat",
     "test": "node --test tests/*.test.js"
   },
   "devDependencies": {
