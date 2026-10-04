@@ -11,6 +11,7 @@
     "deploy:api": "wrangler deploy",
     "deploy:frontend": "wrangler pages deploy public --project-name gdrive-frontend",
     "auth:token": "node scripts/get-refresh-token.js",
+    "get-token": "node scripts/get-refresh-token.js",
     "decrypt": "node scripts/decrypt-tool.js",
     "test": "node --test tests/*.test.js"
   },
