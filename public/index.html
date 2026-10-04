@@ -82,8 +82,12 @@
         </button>
       </form>
 
-      <div class="mt-6 pt-4 border-t border-slate-800 text-center text-[11px] font-mono text-slate-500">
-        Cloudflare Edge & Google Drive API v3 (100% Free)
+      <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-500">
+        <span>Cloudflare Edge & Google Drive API v3</span>
+        <a href="decrypt.html" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
+          <i data-lucide="unlock" class="w-3.5 h-3.5"></i>
+          <span>.enc DEŞİFRELE</span>
+        </a>
       </div>
     </div>
   </div>
@@ -110,7 +114,7 @@
           </div>
         </div>
 
-        <!-- Sağ: Kota & Panic Purge Butonu -->
+        <!-- Sağ: Kota, Deşifreleyici & Panic Purge Butonu -->
         <div class="flex items-center gap-3 self-end sm:self-center">
           <!-- Drive Kota Kartı -->
           <div class="hidden md:flex flex-col items-end min-w-[180px]">
@@ -122,6 +126,17 @@
               <div id="quotaBar" class="bg-cyan-400 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
           </div>
+
+          <!-- Deşifreleyici Butonu -->
+          <a
+            href="decrypt.html"
+            target="_blank"
+            class="px-3.5 py-2 rounded-lg bg-cyan-950/60 hover:bg-cyan-900/80 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 font-mono text-xs flex items-center gap-1.5 transition active:scale-95 touch-target shadow-lg shadow-cyan-950/50"
+            title="Şifrelenmiş .enc dosyalarını tarayıcıda çözmek için aracı aç"
+          >
+            <i data-lucide="unlock" class="w-4 h-4 text-cyan-400"></i>
+            <span class="hidden sm:inline">DEŞİFRELEYİCİ</span>
+          </a>
 
           <!-- Panic Wipe Butonu -->
           <button
