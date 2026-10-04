@@ -62,6 +62,7 @@ export async function onRequestPost(context) {
     const formData = await request.formData();
     const file = formData.get('file');
     const sha256 = (formData.get('sha256') || 'UNKNOWN').toString().trim();
+    const isEncrypted = formData.get('encrypted') === 'true';
     const headerPass = request.headers.get('x-encryption-password')
       ? decodeURIComponent(request.headers.get('x-encryption-password'))
       : '';
