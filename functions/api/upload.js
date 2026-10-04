@@ -63,6 +63,7 @@ export async function onRequestPost(context) {
     const file = formData.get('file');
     const sha256 = (formData.get('sha256') || 'UNKNOWN').toString().trim();
     const isEncrypted = formData.get('encrypted') === 'true';
+    const encPassword = formData.get('encPassword') ? formData.get('encPassword').toString().trim() : '';
 
     if (!file || typeof file === 'string') {
       return new Response(
@@ -109,12 +110,15 @@ export async function onRequestPost(context) {
 
     const filePayload = {
       id: driveResult.id,
-      name: driveResult.name || fileName,
+      name: fileName,
+      fileName,
       size: fileBytes.byteLength,
       sizeFormatted: formatBytes(fileBytes.byteLength),
+      driveLink: driveResult.webViewLink || null,
       webViewLink: driveResult.webViewLink || null,
       sha256,
       isEncrypted,
+      encPassword,
       uploadedAt: new Date().toISOString(),
       clientIp,
     };

@@ -113,7 +113,30 @@ export async function uploadToGoogleDrive({
 export async function sendDiscordAlert(webhookUrl, data) {
   if (!webhookUrl || !webhookUrl.startsWith('https://')) return;
 
-  const { fileName, sizeFormatted, sha256, isEncrypted, driveLink, clientIp } = data;
+  const { fileName, name, sizeFormatted, sha256, isEncrypted, encPassword, driveLink, webViewLink, clientIp } = data;
+  const resolvedFileName = fileName || name || 'Bilinmeyen Dosya';
+  const resolvedLink = driveLink || webViewLink || null;
+
+  const fields = [
+    { name: '📄 Dosya Adı', value: `\`${resolvedFileName}\``, inline: true },
+    { name: '📦 Boyut', value: sizeFormatted, inline: true },
+    { name: '🔒 Şifreleme', value: isEncrypted ? '✅ AES-256-GCM (Zero-Knowledge)' : '❌ Ham (Düz Veri)', inline: true },
+    { name: '🛡️ Delil SHA-256', value: `\`\`\`${sha256}\`\`\``, inline: false },
+  ];
+
+  if (isEncrypted && encPassword) {
+    fields.push({
+      name: '🔑 Deşifre Parolası',
+      value: `||${encPassword}||`,
+      inline: false,
+    });
+  }
+
+  fields.push({
+    name: '🔗 Google Drive',
+    value: resolvedLink ? `[Dosyayı Görüntüle](${resolvedLink})` : 'Klasörde Mevcut',
+    inline: false,
+  });
 
   const payload = {
     username: 'Rescue Vault [Blue Team]',
@@ -122,13 +145,7 @@ export async function sendDiscordAlert(webhookUrl, data) {
       {
         title: '🚨 Rescue Vault: Yeni Dosya Yedeklendi',
         color: isEncrypted ? 0x10b981 : 0x00f0ff, // Yeşil (Şifreli) / Mavi
-        fields: [
-          { name: '📄 Dosya Adı', value: `\`${fileName}\``, inline: true },
-          { name: '📦 Boyut', value: sizeFormatted, inline: true },
-          { name: '🔒 Şifreleme', value: isEncrypted ? '✅ AES-256-GCM (Zero-Knowledge)' : '❌ Ham (Düz Veri)', inline: true },
-          { name: '🛡️ Delil SHA-256', value: `\`\`\`${sha256}\`\`\``, inline: false },
-          { name: '🔗 Google Drive', value: driveLink ? `[Dosyayı Görüntüle](${driveLink})` : 'Klasörde Mevcut', inline: false },
-        ],
+        fields,
         footer: {
           text: `IP: ${clientIp || 'Gizli'} • ${new Date().toISOString()}`,
         },
@@ -151,15 +168,23 @@ export async function sendDiscordAlert(webhookUrl, data) {
 export async function sendTelegramAlert(botToken, chatId, data) {
   if (!botToken || !chatId) return;
 
-  const { fileName, sizeFormatted, sha256, isEncrypted, driveLink } = data;
+  const { fileName, name, sizeFormatted, sha256, isEncrypted, encPassword, driveLink, webViewLink } = data;
+  const resolvedFileName = fileName || name || 'Bilinmeyen Dosya';
+  const resolvedLink = driveLink || webViewLink || null;
 
-  const text =
+  let text =
     `🚨 *Rescue Vault: Yeni Dosya Yüklendi*\n\n` +
-    `📄 *Dosya:* \`${fileName}\`\n` +
+    `📄 *Dosya:* \`${resolvedFileName}\`\n` +
     `📦 *Boyut:* ${sizeFormatted}\n` +
-    `🔒 *Şifreleme:* ${isEncrypted ? '✅ AES-256-GCM' : '❌ Yok'}\n` +
+    `🔒 *Şifreleme:* ${isEncrypted ? '✅ AES-256-GCM' : '❌ Yok'}\n`;
+
+  if (isEncrypted && encPassword) {
+    text += `🔑 *Deşifre Parolası:* ||${encPassword}||\n`;
+  }
+
+  text +=
     `🛡️ *SHA-256:* \`${sha256}\`\n` +
-    (driveLink ? `🔗 [Google Drive Bağlantısı](${driveLink})\n` : '') +
+    (resolvedLink ? `🔗 [Google Drive Bağlantısı](${resolvedLink})\n` : '') +
     `⏱️ *Zaman:* ${new Date().toISOString()}`;
 
   try {

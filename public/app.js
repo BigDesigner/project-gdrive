@@ -428,6 +428,9 @@ async function uploadSingleFile(file) {
   formData.append('file', uploadBlob, finalFileName);
   formData.append('sha256', originalSha256);
   formData.append('encrypted', isEncrypted ? 'true' : 'false');
+  if (isEncrypted) {
+    formData.append('encPassword', encryptionPasswordInput.value.trim());
+  }
 
   // XHR ile Yükleme ve Canlı İlerleme Çubuğu
   return new Promise((resolve, reject) => {
