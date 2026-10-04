@@ -1,0 +1,125 @@
+/* Tactical Cyber / Blue Team Rescue Theme */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-deep: #07090e;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --border-subtle: rgba(56, 189, 248, 0.15);
+  --border-active: rgba(56, 189, 248, 0.6);
+  --cyan-glow: #00f0ff;
+  --emerald-safe: #10b981;
+  --crimson-panic: #ef4444;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-deep);
+  color: #f1f5f9;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Subtle tactical grid background */
+.tactical-grid {
+  background-image: 
+    radial-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Glassmorphism panels */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+/* Dropzone Animations */
+.dropzone-box {
+  position: relative;
+  border: 2px dashed rgba(56, 189, 248, 0.35);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.dropzone-box:hover,
+.dropzone-box.drag-over {
+  border-color: var(--cyan-glow);
+  background: rgba(14, 165, 233, 0.06);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.dropzone-box.drag-over {
+  border-style: solid;
+  transform: scale(1.01);
+}
+
+/* Pulse animation for active uploads */
+@keyframes cyber-pulse {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
+  }
+  50% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.2));
+  }
+}
+
+.pulse-glow {
+  animation: cyber-pulse 2s infinite ease-in-out;
+}
+
+/* Progress bar cyber gradient */
+.progress-cyber {
+  background: linear-gradient(90deg, #0284c7 0%, #00f0ff 50%, #10b981 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Mobile Touch Optimization */
+@media (max-width: 640px) {
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .glass-panel {
+    border-radius: 10px;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.5);
+}

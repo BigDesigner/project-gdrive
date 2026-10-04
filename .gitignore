@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Cloudflare Pages / Wrangler
+.wrangler/
+.mf/
+
+# Secrets & Environment variables
+.env
+.env.local
+.env.*.local
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Lock files if needed
+.session.lock

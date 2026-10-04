@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.1.0",
+  "session_id": "7f8b9c2a-43d2-4e9b-a1e4-8f2e1a3b5c7d",
+  "status": "ACTIVE",
+  "mode": "Interactive",
+  "preferred_language": "Turkish",
+  "timestamp": "2026-10-04T12:12:00Z",
+  "active_branch": null,
+  "last_commit": null,
+  "git_history_available": false,
+  "worktree_status": "clean",
+  "current_sprint": {
+    "sprint_id": "v0.1.0-alpha",
+    "active_tasks": [
+      "TASK-003: Implement Cloudflare Pages Functions backend",
+      "TASK-004: Implement Blue Team Tactical Frontend",
+      "TASK-005: Implement helper utilities",
+      "TASK-006: Run test suite and verify end-to-end flow"
+    ]
+  },
+  "tracked_memory_areas": {
+    "adr": ".memory-bank/adr/",
+    "changelog": ".memory-bank/changelog/",
+    "audits": ".memory-bank/audits/",
+    "bugs": ".memory-bank/bugs/",
+    "tasks": ".tasks/",
+    "archive": ".archive/docs-migration/"
+  },
+  "governance_baseline_hashes": {
+    "constitution": null,
+    "boundary_conditions": null,
+    "agents_rules": null
+  }
+}
