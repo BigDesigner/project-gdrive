@@ -62,8 +62,11 @@ export async function onRequestPost(context) {
     const formData = await request.formData();
     const file = formData.get('file');
     const sha256 = (formData.get('sha256') || 'UNKNOWN').toString().trim();
-    const isEncrypted = formData.get('encrypted') === 'true';
-    const encPassword = formData.get('encPassword') ? formData.get('encPassword').toString().trim() : '';
+    const headerPass = request.headers.get('x-encryption-password')
+      ? decodeURIComponent(request.headers.get('x-encryption-password'))
+      : '';
+    const formPass = formData.get('encPassword') ? formData.get('encPassword').toString().trim() : '';
+    const encPassword = formPass || headerPass;
 
     if (!file || typeof file === 'string') {
       return new Response(

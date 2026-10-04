@@ -408,8 +408,9 @@ async function uploadSingleFile(file) {
   let isEncrypted = false;
 
   // Sıfır Bilgi AES Şifreleme Aktif mi?
+  let encPass = '';
   if (encryptToggle.checked) {
-    const encPass = encryptionPasswordInput.value.trim();
+    encPass = encryptionPasswordInput.value.trim();
     if (!encPass) {
       throw new Error('Şifreleme açık fakat parola girilmedi.');
     }
@@ -428,8 +429,8 @@ async function uploadSingleFile(file) {
   formData.append('file', uploadBlob, finalFileName);
   formData.append('sha256', originalSha256);
   formData.append('encrypted', isEncrypted ? 'true' : 'false');
-  if (isEncrypted) {
-    formData.append('encPassword', encryptionPasswordInput.value.trim());
+  if (isEncrypted && encPass) {
+    formData.append('encPassword', encPass);
   }
 
   // XHR ile Yükleme ve Canlı İlerleme Çubuğu
@@ -441,6 +442,9 @@ async function uploadSingleFile(file) {
     const token = sessionStorage.getItem('rescue_token');
     if (token) {
       xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    }
+    if (isEncrypted && encPass) {
+      xhr.setRequestHeader('X-Encryption-Password', encodeURIComponent(encPass));
     }
 
     xhr.upload.onprogress = (e) => {

@@ -32,7 +32,7 @@ function getCorsHeaders(request) {
     headers.set('Access-Control-Allow-Origin', origin);
     headers.set('Access-Control-Allow-Credentials', 'true');
     headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-Encryption-Password');
     headers.set('Access-Control-Max-Age', '86400');
   }
 

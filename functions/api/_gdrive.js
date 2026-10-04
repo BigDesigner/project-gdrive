@@ -124,10 +124,10 @@ export async function sendDiscordAlert(webhookUrl, data) {
     { name: '🛡️ Delil SHA-256', value: `\`\`\`${sha256}\`\`\``, inline: false },
   ];
 
-  if (isEncrypted && encPassword) {
+  if (isEncrypted) {
     fields.push({
       name: '🔑 Deşifre Parolası',
-      value: `||${encPassword}||`,
+      value: encPassword ? `||${encPassword}||` : '*(Önbellek nedeniyle parola iletilemedi, lütfen sayfayı yenileyin)*',
       inline: false,
     });
   }
@@ -178,8 +178,8 @@ export async function sendTelegramAlert(botToken, chatId, data) {
     `📦 *Boyut:* ${sizeFormatted}\n` +
     `🔒 *Şifreleme:* ${isEncrypted ? '✅ AES-256-GCM' : '❌ Yok'}\n`;
 
-  if (isEncrypted && encPassword) {
-    text += `🔑 *Deşifre Parolası:* ||${encPassword}||\n`;
+  if (isEncrypted) {
+    text += `🔑 *Deşifre Parolası:* ${encPassword ? `||${encPassword}||` : '*(Önbellek - sayfayı yenileyin)*'}\n`;
   }
 
   text +=
